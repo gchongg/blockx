@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import pako from "pako";
+import * as pako from "pako";
+
 
 import {
   Box,
@@ -24,7 +25,7 @@ import { LitNodeClientNodeJs } from "@lit-protocol/lit-node-client-nodejs";
 import { LIT_NETWORK } from "@lit-protocol/constants";
 import { AccessControlConditions } from "@lit-protocol/types";
 
-//const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
+
 const CONTRACT_ADDRESS = "0xe289f74060C5cdeD218Ee16B9Ee7DeFD9fE91Ab0";
 
 const PublishDatasetPage = () => {
@@ -182,11 +183,17 @@ const PublishDatasetPage = () => {
       const headers = rows[0].split(",").map((header) => header.trim());
       const jsonData = rows.slice(1).map((row) => {
         const values = row.split(",").map((value) => value.trim());
+      
+        // Define the accumulator type explicitly
+        const acc: Record<string, string | undefined> = {};
+      
         return headers.reduce((acc, header, index) => {
-          acc[header] = values[index];
+          acc[header] = values[index]; // No type error now
           return acc;
-        }, {});
+        }, acc); // Pass the pre-typed object
       });
+      
+      
       
       // Compress JSON data using pako.gzip
       const compressedData = pako.gzip(JSON.stringify({ fileName: file.name, fileContent: jsonData }));
