@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import * as pako from "pako";
+
+
 import {
   Box,
   Button,
@@ -22,8 +25,9 @@ import { LitNodeClientNodeJs } from "@lit-protocol/lit-node-client-nodejs";
 import { LIT_NETWORK } from "@lit-protocol/constants";
 import { AccessControlConditions } from "@lit-protocol/types";
 
+
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
-console.log(1);
+const CONTRACT_ADDRESS_2 = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS_2!;
 
 const PublishDatasetPage = () => {
   const [name, setName] = useState<string>("");
