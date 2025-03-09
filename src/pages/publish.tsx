@@ -235,13 +235,24 @@ const PublishDatasetPage = () => {
       const responseData = await response.json();
       const ipfsHash = responseData["ipfsCID"];
 
-      toast({
-        title: "File uploaded to IPFS.",
-        description: `CID: ${ipfsHash}`,
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
+      if (ipfsHash) {
+        toast({
+          title: "File uploaded to IPFS.",
+          description: `CID: ${ipfsHash}`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        const error_mess = responseData.errorMessage;
+        toast({
+          title: error_mess,
+          description: "Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
 
       // Step 2: Encrypt the CID using Lit Protocol
       // Configure the chain (adjust if needed)
