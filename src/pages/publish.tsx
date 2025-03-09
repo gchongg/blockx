@@ -112,15 +112,128 @@ const PublishDatasetPage = () => {
       return;
     }
 
+    if (!price) {
+      toast({
+        title: "Price not set.",
+        description: "Please specify a price for the dataset.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
       setIsPublishing(true);
 
-      // Step 1: Upload file to IPFS via Pinata
-      const blob = new Blob([file], { type: file.type });
-      const upload = await pinata.upload.file(
-        new File([blob], file.name, { type: file.type })
+      incrementUploadCount();
+      console.log(uploadCount);
+      if (uploadCount >= 5) {
+        try {
+        const contractABI2 = [
+          // ABI for sendETH function
+          {
+            inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+            name: "sendETH",
+            outputs: [],
+            stateMutability: "payable",
+            type: "function",
+          },
+        ];
+        const contract = new ethers.Contract(CONTRACT_ADDRESS_2, contractABI2, signer);
+  
+        const amountInWei2 = ethers.utils.parseEther("0.00025");
+        const tx2 = await contract.sendETH(amountInWei2, { 
+          value: amountInWei2
+        });
+
+  
+        toast({
+          title: "Upload additional fee submitted.",
+          description: "Waiting for confirmation...",
+          status: "info",
+          duration: 3000,
+          isClosable: true,
+        });
+  
+        await tx2.wait();
+  
+            toast({
+              title: "Penalty Paid.",
+              description: "0.00025 ETH penalty has been sent successfully.",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+            });
+          } catch (error) {
+            console.error("Transaction error:", error);
+            toast({
+              title: "Transaction Failed.",
+              description: "Please try again later.",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
+          }
+      };
+
+      const text = await file.text();
+      // Process CSV: Convert CSV data to JSON format
+      const rows = text.split("\n").filter((row) => row.trim() !== "");
+      const headers = rows[0].split(",").map((header) => header.trim());
+      const jsonData = rows.slice(1).map((row) => {
+        const values = row.split(",").map((value) => value.trim());
+      
+        // Define the accumulator type explicitly
+        const acc: Record<string, string | undefined> = {};
+      
+        return headers.reduce((acc, header, index) => {
+          acc[header] = values[index]; // No type error now
+          return acc;
+        }, acc); // Pass the pre-typed object
+      });
+      
+      
+      
+      // Compress JSON data using pako.gzip
+      const compressedData = pako.gzip(JSON.stringify({ fileName: file.name, fileContent: jsonData }));
+      // Convert compressed binary data to Base64 for transmission
+      const uint8Array = new Uint8Array(compressedData);
+      const stringData = Array.from(uint8Array, (byte) => String.fromCharCode(byte)).join("");
+      const base64Data = btoa(stringData);
+
+
+      // Prepare the request data
+      const requestData = {
+        body: JSON.stringify({
+          fileName: file.name,
+          fileContent: base64Data,  // base64-encoded compressed data
+        }),
+      };
+
+
+
+      toast({
+        title: "PII scrubber running.",
+        description: "Waiting for scrubbing...",
+        status: "info",
+        duration: 5000,
+        isClosable: true,
+      });
+      // Send the request
+      const response = await fetch(
+        "https://629dvfww9a.execute-api.us-east-2.amazonaws.com/dev/upload",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",  // Ensure the content type is JSON
+          },
+          body: JSON.stringify(requestData),  // Ensure body is correctly stringified
+        }
       );
-      const ipfsHash = upload.cid;
+
+      const responseData = await response.json();
+      const ipfsHash = responseData["ipfsCID"];
 
       toast({
         title: "File uploaded to IPFS.",
