@@ -13,7 +13,7 @@ import {
   FormControl,
   FormLabel,
   useToast,
-  Spinner,
+  Spinner
 } from "@chakra-ui/react";
 import { useAccount, useSigner } from "wagmi";
 import { PinataSDK } from "pinata";
@@ -49,7 +49,7 @@ const PublishDatasetPage = () => {
   const GATEWAY_URL = process.env.NEXT_PUBLIC_GATEWAY_URL!;
   const pinata = new PinataSDK({
     pinataJwt: PINATA_JWT,
-    pinataGateway: GATEWAY_URL,
+    pinataGateway: GATEWAY_URL
   });
 
   // Handle file selection
@@ -57,13 +57,19 @@ const PublishDatasetPage = () => {
     if (e.target.files && e.target.files.length > 0) {
       const selectedFile = e.target.files[0];
 
-      if (selectedFile.size > 6 * 1024 * 1024) { // 10MB limit
+      console.log("File selected:", {
+        name: selectedFile.name,
+        type: selectedFile.type,
+        size: selectedFile.size
+      });
+
+      if (selectedFile.size > 6 * 1024 * 1024) { // 6MB limit
         toast({
           title: "File too large.",
-          description: "Please upload a file smaller than 10MB.",
+          description: "Please upload a file smaller than 6MB.",
           status: "error",
           duration: 3000,
-          isClosable: true,
+          isClosable: true
         });
         setIsFileValid(false);
         setFile(null); // Clear the file
@@ -88,16 +94,18 @@ const PublishDatasetPage = () => {
     localStorage.setItem("uploadCount", newCount.toString());
   };
 
-  // Sell Dataset: Upload File to IPFS, Encrypt the CID, and Publish to Blockchain
+  // Sell Dataset: Upload File to IPFS, Encrypt the CID and Publish to Blockchain
   const sellDataset = async () => {
+    console.log("Starting the sellDataset process...");
     if (!signer) {
       toast({
         title: "Wallet not connected.",
         description: "Please connect your wallet first!",
         status: "error",
         duration: 3000,
-        isClosable: true,
+        isClosable: true
       });
+      console.log("Sell process halted: No signer detected.");
       return;
     }
 
@@ -107,8 +115,9 @@ const PublishDatasetPage = () => {
         description: "Please select a file before publishing.",
         status: "warning",
         duration: 3000,
-        isClosable: true,
+        isClosable: true
       });
+      console.log("Sell process halted: No file provided.");
       return;
     }
 
@@ -118,7 +127,7 @@ const PublishDatasetPage = () => {
         description: "Please specify a price for the dataset.",
         status: "warning",
         duration: 3000,
-        isClosable: true,
+        isClosable: true
       });
       return;
     }
@@ -130,71 +139,71 @@ const PublishDatasetPage = () => {
       console.log(uploadCount);
       if (uploadCount >= 5) {
         try {
-        //const contractABI2 = [
+          //const contractABI2 = [
           // ABI for sendETH function
           //{
           //  inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
           //  name: "sendETH",
           //  outputs: [],
           //  stateMutability: "payable",
-          //  type: "function",
-          //},
-        //];
-        //const contract = new ethers.Contract(CONTRACT_ADDRESS_2, contractABI2, signer);
+          //  type: "function"
+          //}
+          //];
+          //const contract = new ethers.Contract(CONTRACT_ADDRESS_2, contractABI2, signer);
           console.log(1);
-        //const amountInWei2 = ethers.utils.parseEther("0.00025");
-        //const tx2 = await contract.sendETH(amountInWei2, { 
-        //  value: amountInWei2
-        //});
+          //const amountInWei2 = ethers.utils.parseEther("0.00025");
+          //const tx2 = await contract.sendETH(amountInWei2, {
+          //  value: amountInWei2
+          //});
 
-  
-        //toast({
-        //  title: "Upload additional fee submitted.",
-        //  description: "Waiting for confirmation...",
-        //  status: "info",
-        //  duration: 3000,
-        //  isClosable: true,
-        //});
-  
-       // await tx2.wait();
-  
-        //    toast({
-              //title: "Penalty Paid.",
-              //description: "0.00025 ETH penalty has been sent successfully.",
-              //status: "success",
-              //duration: 5000,
-              //isClosable: true,
-            //});
-          } catch (error) {
-            console.error("Transaction error:", error);
-            toast({
-              title: "Transaction Failed.",
-              description: "Please try again later.",
-              status: "error",
-              duration: 5000,
-              isClosable: true,
-            });
-          }
+
+          //toast({
+          //  title: "Upload additional fee submitted.",
+          //  description: "Waiting for confirmation...",
+          //  status: "info",
+          //  duration: 3000,
+          //  isClosable: true
+          //});
+
+          // await tx2.wait();
+
+          //    toast({
+          //title: "Penalty Paid.",
+          //description: "0.00025 ETH penalty has been sent successfully.",
+          //status: "success",
+          //duration: 5000,
+          //isClosable: true
+          //});
+        } catch (error) {
+          console.error("Transaction error:", error);
+          toast({
+            title: "Transaction Failed.",
+            description: "Please try again later.",
+            status: "error",
+            duration: 5000,
+            isClosable: true
+          });
+        }
       };
 
+      // Step 1: Upload file to IPFS via Pinata
+      console.log("Uploading file to IPFS via Pinata...");
       const text = await file.text();
       // Process CSV: Convert CSV data to JSON format
       const rows = text.split("\n").filter((row) => row.trim() !== "");
       const headers = rows[0].split(",").map((header) => header.trim());
       const jsonData = rows.slice(1).map((row) => {
         const values = row.split(",").map((value) => value.trim());
-      
+
         // Define the accumulator type explicitly
         const acc: Record<string, string | undefined> = {};
-      
+
         return headers.reduce((acc, header, index) => {
           acc[header] = values[index]; // No type error now
           return acc;
         }, acc); // Pass the pre-typed object
       });
-      
-      
-      
+
       // Compress JSON data using pako.gzip
       const compressedData = pako.gzip(JSON.stringify({ fileName: file.name, fileContent: jsonData }));
       // Convert compressed binary data to Base64 for transmission
@@ -202,23 +211,20 @@ const PublishDatasetPage = () => {
       const stringData = Array.from(uint8Array, (byte) => String.fromCharCode(byte)).join("");
       const base64Data = btoa(stringData);
 
-
       // Prepare the request data
       const requestData = {
         body: JSON.stringify({
           fileName: file.name,
-          fileContent: base64Data,  // base64-encoded compressed data
-        }),
+          fileContent: base64Data  // base64-encoded compressed data
+        })
       };
-
-
 
       toast({
         title: "PII scrubber running.",
         description: "Waiting for scrubbing...",
         status: "info",
         duration: 5000,
-        isClosable: true,
+        isClosable: true
       });
       // Send the request
       const response = await fetch(
@@ -226,9 +232,9 @@ const PublishDatasetPage = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",  // Ensure the content type is JSON
+            "Content-Type": "application/json"  // Ensure the content type is JSON
           },
-          body: JSON.stringify(requestData),  // Ensure body is correctly stringified
+          body: JSON.stringify(requestData)  // Ensure body is correctly stringified
         }
       );
 
@@ -241,7 +247,7 @@ const PublishDatasetPage = () => {
           description: `CID: ${ipfsHash}`,
           status: "success",
           duration: 5000,
-          isClosable: true,
+          isClosable: true
         });
       } else {
         const error_mess = responseData.errorMessage;
@@ -250,94 +256,107 @@ const PublishDatasetPage = () => {
           description: "Please try again.",
           status: "error",
           duration: 3000,
-          isClosable: true,
+          isClosable: true
         });
       }
 
       // Step 2: Encrypt the CID using Lit Protocol
-      // Configure the chain (adjust if needed)
-      const chain = "sepolia"; 
-      
+      console.log("Initializing Lit Node Client for encryption...");
+      const chain = "sepolia";
+
       // Initialize the Lit Node Client
       const litNodeClient = new LitNodeClientNodeJs({
         litNetwork: LIT_NETWORK.DatilDev, // or your chosen Lit network
-        alertWhenUnauthorized: false,
+        alertWhenUnauthorized: false
       });
       await litNodeClient.connect();
+      console.log("Lit Node Client connected.");
 
       // Define access control conditions.
-      // In this demo, we use a simple condition so that any wallet (with ETH) can decrypt.
-      // You can adjust this condition to better match your marketplace logic.
       const accessControlConditions: AccessControlConditions = [
         {
           contractAddress: "",
           standardContractType: "",
-          chain: "sepolia" as "sepolia", // Type assertion here
+          chain: "sepolia" as "sepolia",
           method: "eth_getBalance",
           parameters: [":userAddress", "latest"],
           returnValueTest: {
             comparator: ">=",
-            value: "0",
-          },
-        },
+            value: "0"
+          }
+        }
       ];
+      console.log("Access control conditions set:", accessControlConditions);
 
-      // Encrypt the IPFS CID.
-      // The encryptString function returns an object containing ciphertext and a dataToEncryptHash.
+      console.log("Encrypting IPFS CID...");
       const { ciphertext, dataToEncryptHash } = await encryptString(
         {
           accessControlConditions,
-          dataToEncrypt: ipfsHash,
+          dataToEncrypt: ipfsHash
         },
         litNodeClient
       );
-      
+      console.log("Encryption complete. Ciphertext and hash generated:", {
+        ciphertext,
+        dataToEncryptHash
+      });
 
       // Disconnect from Lit Node Client when done
       await litNodeClient.disconnect();
+      console.log("Lit Node Client disconnected.");
 
       // Prepare the encrypted payload.
-      // You may store this JSON string on-chain and later use it to decrypt the CID.
       const encryptedCidPayload = JSON.stringify({
         ciphertext,
         dataToEncryptHash,
-        accessControlConditions,
+        accessControlConditions
       });
+      console.log("Encrypted payload prepared:", encryptedCidPayload);
 
       toast({
         title: "CID encrypted.",
         description: "Your IPFS CID has been encrypted before storing on-chain.",
         status: "success",
         duration: 5000,
-        isClosable: true,
+        isClosable: true
       });
 
       // Step 3: Publish dataset details (including encrypted CID) to the blockchain
+      console.log("Preparing to send transaction to blockchain with dataset details...");
       const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
       const priceInWei = ethers.utils.parseEther(price);
+      console.log("Transaction details:", {
+        name,
+        description,
+        priceInWei: priceInWei.toString(),
+        encryptedCidPayload
+      });
 
-      // We now pass encryptedCidPayload instead of the plain ipfsHash.
       const tx = await contract.createListing(
         name,
         priceInWei,
         description,
         encryptedCidPayload
       );
+      console.log("Transaction submitted. Tx hash:", tx.hash);
+
       toast({
         title: "Transaction submitted.",
         description: "Waiting for confirmation...",
         status: "info",
         duration: 5000,
-        isClosable: true,
+        isClosable: true
       });
 
       await tx.wait();
+      console.log("Transaction confirmed.");
+
       toast({
         title: "Dataset listed successfully.",
         description: "Your dataset has been listed for sale.",
         status: "success",
         duration: 5000,
-        isClosable: true,
+        isClosable: true
       });
 
       // Clear the form after success
@@ -345,6 +364,7 @@ const PublishDatasetPage = () => {
       setDescription("");
       setFile(null);
       setPrice("");
+      console.log("Form cleared after successful transaction.");
     } catch (error) {
       console.error("Error during the sell process:", error);
       toast({
@@ -352,10 +372,11 @@ const PublishDatasetPage = () => {
         description: "Please try again.",
         status: "error",
         duration: 5000,
-        isClosable: true,
+        isClosable: true
       });
     } finally {
       setIsPublishing(false);
+      console.log("Sell process completed. isPublishing set to false.");
     }
   };
 
@@ -377,7 +398,10 @@ const PublishDatasetPage = () => {
           <Input
             placeholder="Dataset Name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              console.log("Name updated:", e.target.value);
+              setName(e.target.value);
+            }}
             isDisabled={!isConnected || isPublishing}
           />
         </FormControl>
@@ -387,7 +411,10 @@ const PublishDatasetPage = () => {
           <Input
             placeholder="Dataset Description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              console.log("Description updated:", e.target.value);
+              setDescription(e.target.value);
+            }}
             isDisabled={!isConnected || isPublishing}
           />
         </FormControl>
@@ -408,7 +435,10 @@ const PublishDatasetPage = () => {
             type="number"
             placeholder="Dataset Price"
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(e) => {
+              console.log("Price updated:", e.target.value);
+              setPrice(e.target.value);
+            }}
             isDisabled={!isConnected || isPublishing}
             min="0"
             step="0.00001"

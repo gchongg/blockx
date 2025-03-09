@@ -29,14 +29,23 @@ export const SocialButton = ({
   children,
   label,
   href,
+  bg,
+  _hover,
+  ...rest
 }: {
   children: ReactNode;
   label: string;
   href: string;
+  bg?: any;
+  _hover?: any;
+  [x: string]: any;
 }) => {
+  const defaultBg = useColorModeValue("blackAlpha.100", "whiteAlpha.100");
+  const defaultHover = { bg: useColorModeValue("blackAlpha.200", "whiteAlpha.200") };
+  
   return (
     <chakra.button
-      bg={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
+      bg={bg || defaultBg}
       rounded={"full"}
       w={8}
       h={8}
@@ -47,10 +56,10 @@ export const SocialButton = ({
       display={"inline-flex"}
       alignItems={"center"}
       justifyContent={"center"}
-      transition={"background 0.3s ease"}
-      _hover={{
-        bg: useColorModeValue("blackAlpha.200", "whiteAlpha.200"),
-      }}
+      transition={"all 0.3s ease"}
+      _hover={_hover || defaultHover}
+      boxShadow="0 2px 4px rgba(0,0,0,0.1)"
+      {...rest}
     >
       <VisuallyHidden>{label}</VisuallyHidden>
       {children}
