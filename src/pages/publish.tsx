@@ -403,16 +403,18 @@ const PublishDatasetPage = () => {
         </FormControl>
 
         <FormControl id="price" isRequired>
-          <FormLabel>Price (ETH)</FormLabel>
+          <FormLabel>Price (Ether)</FormLabel>
           <Input
             type="number"
             placeholder="Dataset Price"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             isDisabled={!isConnected || isPublishing}
+            min="0"
+            step="0.00001"
           />
         </FormControl>
-
+        
         <Button
           colorScheme="green"
           onClick={sellDataset}
