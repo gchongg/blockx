@@ -130,41 +130,41 @@ const PublishDatasetPage = () => {
       console.log(uploadCount);
       if (uploadCount >= 5) {
         try {
-        const contractABI2 = [
+        //const contractABI2 = [
           // ABI for sendETH function
-          {
-            inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-            name: "sendETH",
-            outputs: [],
-            stateMutability: "payable",
-            type: "function",
-          },
-        ];
-        const contract = new ethers.Contract(CONTRACT_ADDRESS_2, contractABI2, signer);
-  
-        const amountInWei2 = ethers.utils.parseEther("0.00025");
-        const tx2 = await contract.sendETH(amountInWei2, { 
-          value: amountInWei2
-        });
+          //{
+          //  inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+          //  name: "sendETH",
+          //  outputs: [],
+          //  stateMutability: "payable",
+          //  type: "function",
+          //},
+        //];
+        //const contract = new ethers.Contract(CONTRACT_ADDRESS_2, contractABI2, signer);
+          console.log(1);
+        //const amountInWei2 = ethers.utils.parseEther("0.00025");
+        //const tx2 = await contract.sendETH(amountInWei2, { 
+        //  value: amountInWei2
+        //});
 
   
-        toast({
-          title: "Upload additional fee submitted.",
-          description: "Waiting for confirmation...",
-          status: "info",
-          duration: 3000,
-          isClosable: true,
-        });
+        //toast({
+        //  title: "Upload additional fee submitted.",
+        //  description: "Waiting for confirmation...",
+        //  status: "info",
+        //  duration: 3000,
+        //  isClosable: true,
+        //});
   
-        await tx2.wait();
+       // await tx2.wait();
   
-            toast({
-              title: "Penalty Paid.",
-              description: "0.00025 ETH penalty has been sent successfully.",
-              status: "success",
-              duration: 5000,
-              isClosable: true,
-            });
+        //    toast({
+              //title: "Penalty Paid.",
+              //description: "0.00025 ETH penalty has been sent successfully.",
+              //status: "success",
+              //duration: 5000,
+              //isClosable: true,
+            //});
           } catch (error) {
             console.error("Transaction error:", error);
             toast({
@@ -414,7 +414,7 @@ const PublishDatasetPage = () => {
             step="0.00001"
           />
         </FormControl>
-        
+
         <Button
           colorScheme="green"
           onClick={sellDataset}
