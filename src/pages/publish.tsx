@@ -39,6 +39,10 @@ const PublishDatasetPage = () => {
 
   const { isConnected } = useAccount();
   const { data: signer } = useSigner();
+  const [uploadCount, setUploadCount] = useState<number>(0);
+  // Handle file selection
+  const [isFileValid, setIsFileValid] = useState<boolean>(true);
+
 
   // Pinata SDK Initialization
   const PINATA_JWT = process.env.NEXT_PUBLIC_PINATA_JWT!;
@@ -51,8 +55,37 @@ const PublishDatasetPage = () => {
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+
+      if (selectedFile.size > 6 * 1024 * 1024) { // 10MB limit
+        toast({
+          title: "File too large.",
+          description: "Please upload a file smaller than 10MB.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        setIsFileValid(false);
+        setFile(null); // Clear the file
+        return;
+      }
+
+      setIsFileValid(true);
+      setFile(selectedFile);
     }
+  };
+
+  useEffect(() => {
+    const storedCount = localStorage.getItem("uploadCount");
+    if (storedCount) {
+      setUploadCount(parseInt(storedCount, 10));
+    }
+  }, []);
+
+  const incrementUploadCount = () => {
+    const newCount = uploadCount + 1;
+    setUploadCount(newCount);
+    localStorage.setItem("uploadCount", newCount.toString());
   };
 
   // Sell Dataset: Upload File to IPFS, Encrypt the CID, and Publish to Blockchain
