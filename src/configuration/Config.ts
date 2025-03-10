@@ -1,7 +1,7 @@
 import { ThemingProps } from '@chakra-ui/react'
 import { sepolia, arbitrum} from '@wagmi/chains'
 
-export const SITE_NAME = 'DataX'
+export const SITE_NAME = 'BlockX'
 export const SITE_DESCRIPTION = ''
 export const SITE_URL = ''
 
