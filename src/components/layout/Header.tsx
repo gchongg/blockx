@@ -166,11 +166,13 @@ const DesktopNav = () => {
                   fontWeight={500}
                   color={isActive ? activeColor : linkColor}
                   rounded={"md"}
+                  minWidth={"500px"}  // Corrected from minwidth to minWidth
                   bg={isActive ? activeBg : "transparent"}
-                  position="relative"
+                  width="auto"  // This adjusts the width dynamically based on content
+                  whiteSpace="nowrap"  // Corrected from whitespace to whiteSpace
                   transitionProperty="all"
-          transitionDuration="0.3s"
-          transitionTimingFunction="ease"
+                  transitionDuration="0.3s"
+                  transitionTimingFunction="ease"
                   border="1px solid transparent"
                   _hover={{
                     textDecoration: "none",
