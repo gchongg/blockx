@@ -50,7 +50,7 @@ export function Footer(props: Props) {
       borderTopWidth="1px"
       borderColor={borderColor}
     >
-      <Container maxW="7xl" py={12} px={{ base: 4, md: 6, lg: 8 }}>
+      <Container maxW="7xl" py={12} px={{ base: 4, md: 6, lg: 8 }} style={{ display: 'none' }}>
         <SimpleGrid 
           templateColumns={{ 
             base: 'repeat(2, 1fr)',
