@@ -87,7 +87,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ router }) => {
               fontSize="lg"
               rounded="md"
             >
-              Learn More
+              Publish Data
             </Button>
           </Flex>
           
