@@ -25,8 +25,8 @@ go to [blockx-omega.vercel.app/](https://blockx-omega.vercel.app/).
 
 ##### Getting started locally
 ``` 
-git clone https://github.com/gchongg/dataX.git
-cd BlockX 
+git clone https://github.com/gchongg/blockx.git
+cd blockx 
 npm install pinata-web3 --legacy-peer-deps
 npm install 
 npm run dev 
