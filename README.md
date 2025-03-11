@@ -1,6 +1,6 @@
-# Data Marketplace Blockchain
+# BlockX: A Secure, Decentralized Data Marketplace
 --------
-**Decentralized Data Marketplace:** [data-x-delta.vercel.app](https://data-x-delta.vercel.app)
+**Decentralized Data Marketplace:** [blockx-omega.vercel.app/](https://blockx-omega.vercel.app/)
 
 **Project Status Website:** https://suaye07.github.io/DSC180_proj_web/
 
@@ -8,18 +8,25 @@
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-This repo contains the back-end code for a decentralized application (dapp), specifically a data marketplace, on the Ethereum Blockchain. To access, go to [data-x-delta.vercel.app](https://data-x-delta.vercel.app). Users can buy and sell data securely and in accordance with privacy laws; there are also on-chain data analytics capabilities. To begin, launch the website attached to this repository. Users, after registering for an account, can upload data to an offshore, decentralized storage location (IPFS) via `Ddm.sol` and post it to the market--along with an overview of the data–general tags like industry, description of what data is about, dataset size, and a column-by-column description; before the data is stored, the data is encrypted, has a script `malware_and_pii.py` run on it to anonymize the data and ensure no malware or SQL injections are present; then the dataset is tagged with a certification so that other users cannot upload the same data. Buyers can see this information and filter data based on their needs. Buyers then purchase desirable data with our token via smart contracts, along with paying a little extra gas to nodes to verify the transaction and upload it to the blockchain via Polygon. Buyers and sellers can also exchange services to run analytics on the data–or any data they have in-house. We will also offer our own service that offers a wide variety of ML applications, like data summarization and image description generation, and allow users to upload scripts. These analytics can be run on-chain for secure, transparent data analysis without compromising privacy. Our focus is on ensuring a safe and secure platform, where the ML applications are secondary.
+This repo contains the back-end code for a decentralized application (dapp), specifically a data marketplace, on the Ethereum Blockchain. To access, go to [blockx-omega.vercel.app/](https://blockx-omega.vercel.app/). 
+
+Users can buy and sell data securely and in accordance with privacy laws.
+
+To get started, launch the website linked to this repository. After registering for an account, users can navigate to the 'Publish' tab to upload data to an offshore, decentralized storage location (IPFS) via `Ddm.sol` and list it on the market through a smart contract. They can also provide key details, including general tags (such as industry), a dataset description, its size, and a column-by-column breakdown. Before storage, the dataset undergoes a security and privacy check using the `malware_and_pii.py` script, which redacts personally identifiable information (PII) and possible SQL injections. The data is then encrypted and tagged with a certification to prevent duplicate uploads. Once these steps are completed, the dataset is added to the 'Catalog'. Sellers can manage their listings in the 'Listed Datasets' section, where they can view their posted datasets and delist them at any time if they choose to stop selling.
+
+
+Buyers can navigate to the 'Catalog' tab and filter datasets based on their specific needs. Once they find a dataset of interest, they can purchase it seamlessly through an easy-to-use smart contract--which is integrated into the interface. Transactions are processed on the Polygon blockchain, with a small additional gas fee paid to nodes for verification. After purchasing, buyers can access and download their datasets from the 'My Datasets' tab. To ensure data integrity, buyers have the option to click 'Verify Data' to check whether the downloaded dataset matches its description. If discrepancies arise, they can request a third-party investigation, where an arbitrator will review the case and take appropriate action.
 
 
 #### Getting Started
 
-go to [data-x-delta.vercel.app](https://data-x-delta.vercel.app)
+go to [blockx-omega.vercel.app/](https://blockx-omega.vercel.app/).
 
 
 ##### Getting started locally
 ``` 
 git clone https://github.com/gchongg/dataX.git
-cd DataX 
+cd BlockX 
 npm install pinata-web3 --legacy-peer-deps
 npm install 
 npm run dev 
