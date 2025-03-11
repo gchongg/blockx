@@ -38,5 +38,5 @@ NEXT_PUBLIC_PINATA_JWT= {your pinata jwt}
 NEXT_PUBLIC_GATEWAY_URL= {your pinata public gateway url }
 NEXT_PUBLIC_INFURA_API_URL=https://sepolia.infura.io/v3/{your infura api key }
 NEXT_PUBLIC_CONTRACT_ADDRESS=0xDE62cFAbBF894a664cBdA497b469B7779E56Aa15
-NEXT_PUBLIC_ALCHEMY_API_KEY={ you alchemy api}
+NEXT_PUBLIC_ALCHEMY_API_KEY={ you alchemy api }
 ```
